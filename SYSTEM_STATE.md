@@ -15,10 +15,10 @@
 * **GitHub Actions Automation:** Not started.
 
 ## 🖥️ Frontend / UI (Frontend Dev)
-* **Next.js Boilerplate (frontend/):** Not started.
-* **Tailwind & shadcn/ui Setup:** Not started.
-* **Supabase Client Connection:** Not started.
-* **UI Components (Tour Cards):** Not started.
+* **Next.js Boilerplate (frontend/):** Intermediate - UI Hydrated.
+* **Tailwind & shadcn/ui Setup:** COMPLETE
+* **Supabase Client Connection:** COMPLETE (SSR)
+* **UI Components (Tour Cards):** COMPLETE
 
 ## 🚧 Current Blockers / Action Items
 * **Action (Samyak):** Log into Supabase, create a new project, and use Antigravity to generate and execute the SQL schema defined in `CORE_SPEC.md`.
