@@ -9,8 +9,8 @@
 ## 🛠️ Backend / Data Pipeline (Samyak)
 * **[2026-05-10T22:46:03+05:30] Agent Initialization:** Successfully initialized and context ingested.
 * **Supabase Setup:** COMPLETE (100%)
-* **Python Environment (backend/):** Not started.
-* **Crawl4AI + Gemini 1.5 Flash Script:** Not started.
+* **Python Environment (scrapers/):** requirements.txt created.
+* **Crawl4AI + Gemini 1.5 Flash Script:** Veena World POC implemented and awaiting local execution.
 * **GitHub Actions Automation:** Not started.
 
 ## 🖥️ Frontend / UI (Frontend Dev)
