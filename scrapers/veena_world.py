@@ -1,5 +1,7 @@
 import os
 import asyncio
+from dotenv import load_dotenv
+load_dotenv()
 from typing import Optional, Dict
 from pydantic import BaseModel, Field
 from crawl4ai import AsyncWebCrawler
@@ -48,7 +50,7 @@ def parse_with_gemini(markdown_content: str, url: str) -> TourPackage:
     """
     
     response = client.models.generate_content(
-        model='gemini-1.5-flash',
+        model='gemini-2.5-flash',
         contents=prompt,
         config=types.GenerateContentConfig(
             response_mime_type="application/json",
