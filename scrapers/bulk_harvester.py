@@ -30,7 +30,7 @@ class TourPackage(BaseModel):
 
 async def extract_markdown(url: str) -> str:
     async with AsyncWebCrawler() as crawler:
-        result = await crawler.arun(url=url)
+        result = await crawler.arun(url=url, delay_before_return_html=3.0)
         return result.markdown
 
 def parse_with_gemini(markdown_content: str, url: str) -> Optional[TourPackage]:
@@ -42,6 +42,9 @@ def parse_with_gemini(markdown_content: str, url: str) -> Optional[TourPackage]:
     If the price is 'null', provide a reason in the logs (just format the JSON as best as you can, but duration_days and price_inr MUST be present).
     Ensure price_inr is the final, per-person total. If the price is per-couple, divide by 2.
     Inclusions must be strict boolean flags. Extract provider_name from the URL or content.
+
+    STRICT CONTEXTUAL BOUNDARIES:
+    You are extracting data for NORTH INDIA only. Ignore any footer ads, cross-promotions, or 'Similar Tours' sections that mention international destinations (like Iceland or Europe). Focus ONLY on the primary package featured in the main body of the page.
     
     The package URL is: {url}
     
