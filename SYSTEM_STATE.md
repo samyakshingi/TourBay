@@ -11,6 +11,7 @@
 * **Supabase Setup:** COMPLETE (100%)
 * **Python Environment (scrapers/):** requirements.txt created.
 * **Crawl4AI + Gemini 1.5 Flash Script:** Veena World POC Tested & Active.
+* **Real Data Acquisition:** In Progress.
 * **GitHub Actions Automation:** Not started.
 
 ## 🖥️ Frontend / UI (Frontend Dev)
