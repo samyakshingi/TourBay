@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { Package } from "@/types/database";
 import { TourCard } from "@/components/TourCard";
+import { TourCardSkeleton } from "@/components/TourCardSkeleton";
 
 export default async function Home() {
   const supabase = await createClient();
@@ -46,9 +47,9 @@ export default async function Home() {
 
         {/* Loading / Empty / Data States */}
         {!packages ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {[1, 2, 3].map(i => (
-              <div key={i} className="h-[400px] rounded-xl bg-white/5 animate-pulse border border-white/10" />
+              <TourCardSkeleton key={i} />
             ))}
           </div>
         ) : packages.length === 0 ? (
@@ -57,9 +58,15 @@ export default async function Home() {
             <p className="text-zinc-400 max-w-sm mx-auto">We are currently updating our systems. Please check back soon for the latest Himalayan tours.</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {packages.map((pkg: Package) => (
-              <TourCard key={pkg.id} tour={pkg} />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {packages.map((pkg: Package, i: number) => (
+              <div 
+                key={pkg.id}
+                className="animate-in fade-in slide-in-from-bottom-4 duration-700 fill-mode-both ease-[cubic-bezier(0.23,1,0.32,1)]"
+                style={{ animationDelay: `${i * 100}ms` }}
+              >
+                <TourCard tour={pkg} />
+              </div>
             ))}
           </div>
         )}

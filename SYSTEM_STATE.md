@@ -15,7 +15,7 @@
 * **GitHub Actions Automation:** Not started.
 
 ## 🖥️ Frontend / UI (Frontend Dev)
-* **Next.js Boilerplate (frontend/):** Intermediate - UI Hydrated.
+* **Next.js Boilerplate (frontend/):** Premium UI Refactored with Skeleton.
 * **Tailwind & shadcn/ui Setup:** COMPLETE
 * **Supabase Client Connection:** COMPLETE (SSR)
 * **UI Components (Tour Cards):** COMPLETE
