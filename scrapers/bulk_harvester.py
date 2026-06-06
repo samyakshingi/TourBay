@@ -234,6 +234,10 @@ async def main():
             
         except Exception as e:
             print(f"Failed processing {url}: {e}")
+            
+        # 12-second delay to avoid Gemini API 429 Rate Limit
+        print("[COOLDOWN] Waiting 12 seconds to prevent rate limit exhaustion...")
+        await asyncio.sleep(12)
 
 if __name__ == "__main__":
     asyncio.run(main())
