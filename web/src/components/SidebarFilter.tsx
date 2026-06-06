@@ -3,6 +3,15 @@
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { useCallback, useTransition } from "react";
 import { Plane, Bed, Utensils, Bus, Camera } from "lucide-react";
+import { Slider } from "@/components/ui/slider";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
 
 const INCLUSIONS_LIST = [
   { id: "flights", label: "Flights", icon: Plane },
@@ -39,12 +48,13 @@ export function SidebarFilter() {
     });
   }, [pathname, router, searchParams]);
 
-  const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    updateFilters({ maxPrice: e.target.value });
+  const handlePriceChange = (value: number | readonly number[]) => {
+    const numericValue = Array.isArray(value) ? value[0] : value;
+    updateFilters({ maxPrice: String(numericValue) });
   };
 
-  const handleDurationChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    updateFilters({ duration: e.target.value });
+  const handleDurationChange = (val: string | null) => {
+    updateFilters({ duration: val });
   };
 
   const handleInclusionToggle = (inclusionId: string) => {
@@ -64,14 +74,14 @@ export function SidebarFilter() {
   };
 
   return (
-    <div className="bg-slate-50/70 backdrop-blur-md rounded-2xl p-6 flex flex-col gap-8 sticky top-24 self-start">
+    <div className="bg-slate-50/70 backdrop-blur-md rounded-2xl p-6 flex flex-col gap-8 sticky top-24 self-start select-none">
       <div>
         <h3 className="font-heading text-lg font-semibold text-slate-950">Filters</h3>
         <p className="text-xs text-slate-500 mt-1">Refine Himalayan escape listings</p>
       </div>
 
       {/* Price Range Slider */}
-      <div className="space-y-3">
+      <div className="space-y-4">
         <div className="flex justify-between items-center text-xs">
           <span className="text-slate-400 font-mono uppercase tracking-wider font-semibold">Max Budget</span>
           <span className="font-mono font-bold text-slate-950">
@@ -82,14 +92,13 @@ export function SidebarFilter() {
             }).format(Number(maxPrice))}
           </span>
         </div>
-        <input
-          type="range"
-          min="20000"
-          max="200000"
-          step="5000"
-          value={maxPrice}
-          onChange={handlePriceChange}
-          className="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-[#0047ab] focus:outline-none"
+        <Slider
+          value={[Number(maxPrice)]}
+          onValueChange={handlePriceChange}
+          min={20000}
+          max={200000}
+          step={5000}
+          className="py-1 cursor-pointer"
         />
         <div className="flex justify-between text-[10px] text-slate-400 font-mono">
           <span>₹20K</span>
@@ -102,23 +111,17 @@ export function SidebarFilter() {
         <label className="text-slate-400 font-mono text-xs uppercase tracking-wider font-semibold block">
           Duration
         </label>
-        <div className="relative">
-          <select
-            value={duration}
-            onChange={handleDurationChange}
-            className="w-full bg-white border border-slate-200 text-slate-900 text-sm rounded-lg focus:ring-2 focus:ring-[#0047ab]/20 focus:border-[#0047ab] p-2.5 appearance-none pr-8 cursor-pointer font-sans"
-          >
-            <option value="all">All Durations</option>
-            <option value="short">1 - 5 Days</option>
-            <option value="medium">6 - 9 Days</option>
-            <option value="long">10+ Days</option>
-          </select>
-          <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-slate-400">
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-            </svg>
-          </div>
-        </div>
+        <Select value={duration} onValueChange={handleDurationChange}>
+          <SelectTrigger className="w-full bg-white border border-slate-200 text-slate-900 rounded-lg hover:border-slate-300 transition-colors cursor-pointer active:scale-[0.97] transition-transform duration-150">
+            <SelectValue placeholder="Select Duration" />
+          </SelectTrigger>
+          <SelectContent className="bg-white border border-slate-200 shadow-md">
+            <SelectItem value="all" className="cursor-pointer active:scale-[0.97] transition-transform duration-100">All Durations</SelectItem>
+            <SelectItem value="short" className="cursor-pointer active:scale-[0.97] transition-transform duration-100">1 - 5 Days</SelectItem>
+            <SelectItem value="medium" className="cursor-pointer active:scale-[0.97] transition-transform duration-100">6 - 9 Days</SelectItem>
+            <SelectItem value="long" className="cursor-pointer active:scale-[0.97] transition-transform duration-100">10+ Days</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
 
       {/* Inclusions Checkboxes */}
@@ -126,40 +129,30 @@ export function SidebarFilter() {
         <span className="text-slate-400 font-mono text-xs uppercase tracking-wider font-semibold block">
           Inclusions
         </span>
-        <div className="space-y-2.5">
+        <div className="space-y-3">
           {INCLUSIONS_LIST.map((inclusion) => {
             const Icon = inclusion.icon;
             const isChecked = selectedInclusions.includes(inclusion.id);
 
             return (
-              <button
+              <div 
                 key={inclusion.id}
-                type="button"
-                onClick={() => handleInclusionToggle(inclusion.id)}
-                className="flex items-center gap-3 w-full text-left group cursor-pointer focus:outline-none"
+                className="flex items-center gap-3 w-full group cursor-pointer active:scale-[0.97] transition-transform duration-150"
               >
-                {/* Custom Checkbox adhering to Stitch checked/unchecked guidelines */}
-                <div
-                  className={`w-5 h-5 rounded-md flex items-center justify-center transition-all ${
-                    isChecked
-                      ? "bg-[#0047ab] text-white"
-                      : "border-2 border-slate-200 bg-transparent text-transparent group-hover:border-slate-300"
-                  }`}
+                <Checkbox
+                  id={`inclusion-${inclusion.id}`}
+                  checked={isChecked}
+                  onCheckedChange={() => handleInclusionToggle(inclusion.id)}
+                  className="cursor-pointer"
+                />
+                <label
+                  htmlFor={`inclusion-${inclusion.id}`}
+                  className="flex items-center gap-2 text-slate-700 group-hover:text-slate-950 transition-colors text-sm font-medium cursor-pointer"
                 >
-                  <svg
-                    className="w-3.5 h-3.5 stroke-[3]"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                  >
-                    <polyline points="20 6 9 17 4 12" />
-                  </svg>
-                </div>
-                <div className="flex items-center gap-2 text-slate-700 group-hover:text-slate-950 transition-colors">
                   <Icon className="w-4 h-4 text-slate-400 group-hover:text-slate-600 transition-colors" />
-                  <span className="text-sm font-medium">{inclusion.label}</span>
-                </div>
-              </button>
+                  <span>{inclusion.label}</span>
+                </label>
+              </div>
             );
           })}
         </div>

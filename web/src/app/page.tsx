@@ -130,45 +130,92 @@ export default async function Home({ searchParams }: PageProps) {
   // Fetch packages directly using the server client
   let packages: Package[] | null = null;
   let hasDbData = false;
+  let dbError = false;
 
   try {
-    const { data, error } = await supabase
+    // Determine if database contains data (for demo mode fallback detection)
+    const { count, error: countError } = await supabase
       .from("packages")
-      .select("*")
-      .order("last_scraped_at", { ascending: false });
+      .select("*", { count: "exact", head: true });
 
-    if (!error && data && data.length > 0) {
-      packages = data;
+    if (!countError && count !== null && count > 0) {
       hasDbData = true;
-    } else if (error) {
-      console.warn("Could not load database packages, fallback to local mock data:", error.message);
+    } else if (countError) {
+      console.warn("Database count check failed, using mock fallback:", countError.message);
     }
   } catch (e) {
-    console.warn("Supabase fetch exception, fallback to local mock data:", e);
+    console.warn("Exception during database connection, using mock fallback:", e);
   }
 
-  // Filter package data on server-side
-  let filteredPackages = hasDbData && packages ? packages : MOCK_PACKAGES;
+  if (hasDbData) {
+    try {
+      let query = supabase.from("packages").select("*");
 
-  // Filter by Max Price
-  filteredPackages = filteredPackages.filter((pkg) => pkg.price_inr <= maxPrice);
+      // Apply server-side filters directly to Postgrest builder
+      if (maxPrice) {
+        query = query.lte("price_inr", maxPrice);
+      }
 
-  // Filter by Duration
-  if (duration !== "all") {
-    filteredPackages = filteredPackages.filter((pkg) => {
-      const days = pkg.duration_days;
-      if (duration === "short") return days <= 5;
-      if (duration === "medium") return days >= 6 && days <= 9;
-      if (duration === "long") return days >= 10;
-      return true;
-    });
+      if (duration !== "all") {
+        if (duration === "short") {
+          query = query.lte("duration_days", 5);
+        } else if (duration === "medium") {
+          query = query.gte("duration_days", 6).lte("duration_days", 9);
+        } else if (duration === "long") {
+          query = query.gte("duration_days", 10);
+        }
+      }
+
+      if (inclusions.length > 0) {
+        const inclusionObj = inclusions.reduce((acc, inc) => {
+          acc[inc] = true;
+          return acc;
+        }, {} as Record<string, boolean>);
+        query = query.contains("inclusions", inclusionObj);
+      }
+
+      const { data, error } = await query.order("last_scraped_at", { ascending: false });
+
+      if (!error && data) {
+        packages = data;
+      } else {
+        console.error("Error fetching filtered packages:", error?.message);
+        dbError = true;
+      }
+    } catch (e) {
+      console.error("Exception fetching filtered packages:", e);
+      dbError = true;
+    }
   }
 
-  // Filter by Inclusions
-  if (inclusions.length > 0) {
-    filteredPackages = filteredPackages.filter((pkg) => {
-      return inclusions.every((inc) => pkg.inclusions[inc as keyof typeof pkg.inclusions] === true);
-    });
+  // Filter package data on server-side if database fell back to mock data
+  let filteredPackages: Package[] = [];
+  if (hasDbData && !dbError && packages) {
+    filteredPackages = packages;
+  } else {
+    let mockFiltered = MOCK_PACKAGES;
+
+    // Filter by Max Price
+    mockFiltered = mockFiltered.filter((pkg) => pkg.price_inr <= maxPrice);
+
+    // Filter by Duration
+    if (duration !== "all") {
+      mockFiltered = mockFiltered.filter((pkg) => {
+        const days = pkg.duration_days;
+        if (duration === "short") return days <= 5;
+        if (duration === "medium") return days >= 6 && days <= 9;
+        if (duration === "long") return days >= 10;
+        return true;
+      });
+    }
+
+    // Filter by Inclusions
+    if (inclusions.length > 0) {
+      mockFiltered = mockFiltered.filter((pkg) => {
+        return inclusions.every((inc) => pkg.inclusions[inc as keyof typeof pkg.inclusions] === true);
+      });
+    }
+    filteredPackages = mockFiltered;
   }
 
   return (
