@@ -1,10 +1,10 @@
 # TourBay.in - System State
 
-**Current Phase:** Phase 1 (COMPLETE - 100% Stable & Verified)
+**Current Phase:** Phase 2 (Live Data Ingestion Active)
 **Last Updated:** June 6, 2026
 
 ## 🟢 Project Status Summary
-**Stable & Verified** - Phase 1 is officially complete and verified. The Next.js frontend compiles cleanly with 100% type-safety and Zero CLS. The scraper pipeline is fully functional with Crawl4AI DOM extraction and Gemini 2.5 Flash structured parsing. Next.js connects via SSR with a resilient try/catch fallback to high-fidelity mock data. The UI conforms strictly to Google Stitch design tokens and Emil Kowalski animation rules. Phase 2 (Data Scale-up & Advanced Aggregations) is ready to unlock.
+**Phase 2 Active** - Stealthed data acquisition is fully operational. The scraper pipeline has been updated with a Playwright headless/headed browser fallback configuration to bypass Akamai/Cloudflare, and an automated UTM affiliate link generator. We have successfully ingested 10 real Kashmir, Ladakh, and Manali packages from Veena World, Thrillophilia, and MakeMyTrip directly into our active Supabase instance, bringing the total packages count to 21 rows. All package URLs are properly instrumented with campaign tracking tags.
 
 ## 🛠️ Backend / Data Pipeline (Samyak)
 * **[2026-05-10T22:46:03+05:30] Agent Initialization:** Successfully initialized and context ingested.
