@@ -4,6 +4,7 @@ import { TourCard } from "@/components/TourCard";
 import { TourCardSkeleton } from "@/components/TourCardSkeleton";
 import { SidebarFilter } from "@/components/SidebarFilter";
 import { Suspense } from "react";
+import Image from "next/image";
 
 interface PageProps {
   searchParams: Promise<{
@@ -175,7 +176,14 @@ export default async function Home({ searchParams }: PageProps) {
       {/* Sticky Header */}
       <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-100 shadow-ambient px-6 lg:px-8 py-4">
         <div className="max-w-[1200px] mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2.5">
+            <Image 
+              src="/logo.png" 
+              alt="TourBay Logo" 
+              width={28} 
+              height={28} 
+              className="object-contain rounded"
+            />
             <span className="font-heading text-lg font-bold text-slate-900 tracking-tight">
               TourBay<span className="text-[#0047ab]">.in</span>
             </span>

@@ -26,8 +26,15 @@ export function TourCard({ tour }: { tour: Package }) {
             className="object-cover transition-transform group-hover:scale-105 duration-700 ease-out"
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100">
-            <span className="text-slate-400 font-mono tracking-wider text-xs">
+          <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100 gap-2">
+            <Image 
+              src="/logo.png" 
+              alt="TourBay Logo Placeholder" 
+              width={40} 
+              height={40} 
+              className="opacity-20 grayscale"
+            />
+            <span className="text-slate-400 font-mono tracking-wider text-[10px] uppercase">
               {tour.destination_region || "HIMALAYAN ESCAPE"}
             </span>
           </div>
