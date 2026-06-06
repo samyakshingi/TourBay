@@ -13,6 +13,110 @@ interface PageProps {
   }>;
 }
 
+// Curated high-fidelity mock data representing real North India packages
+const MOCK_PACKAGES: Package[] = [
+  {
+    id: "mock-1",
+    provider_name: "Veena World",
+    destination_region: "Kashmir",
+    package_title: "Magical Kashmir Tour Package - Paradise on Earth",
+    duration_days: 6,
+    duration_nights: 5,
+    price_inr: 48500,
+    inclusions: {
+      flights: true,
+      hotels: true,
+      meals: true,
+      transfers: true,
+      sightseeing: true,
+    },
+    theme: "Family",
+    package_url: "https://www.veenaworld.com/package/magical-kashmir-tour-package-haqm",
+    image_url: "https://images.unsplash.com/photo-1566837945700-30057527ade0?q=80&w=600&auto=format&fit=crop",
+    last_scraped_at: new Date().toISOString(),
+  },
+  {
+    id: "mock-2",
+    provider_name: "Thrillophilia",
+    destination_region: "Leh Ladakh",
+    package_title: "Leh Ladakh Bike Expedition - High Mountain Passes",
+    duration_days: 7,
+    duration_nights: 6,
+    price_inr: 34000,
+    inclusions: {
+      flights: false,
+      hotels: true,
+      meals: true,
+      transfers: true,
+      sightseeing: true,
+    },
+    theme: "Adventure",
+    package_url: "https://www.thrillophilia.com/tours/leh-ladakh-tour-packages",
+    image_url: "https://images.unsplash.com/photo-1596760405808-c69f02244a53?q=80&w=600&auto=format&fit=crop",
+    last_scraped_at: new Date().toISOString(),
+  },
+  {
+    id: "mock-3",
+    provider_name: "Thrillophilia",
+    destination_region: "Manali",
+    package_title: "Manali Budget Getaway with Solang Valley",
+    duration_days: 5,
+    duration_nights: 4,
+    price_inr: 18500,
+    inclusions: {
+      flights: false,
+      hotels: true,
+      meals: true,
+      transfers: true,
+      sightseeing: true,
+    },
+    theme: "Budget",
+    package_url: "https://www.thrillophilia.com/tours/manali-tour-packages",
+    image_url: "https://images.unsplash.com/photo-1626621340025-013a219a8611?q=80&w=600&auto=format&fit=crop",
+    last_scraped_at: new Date().toISOString(),
+  },
+  {
+    id: "mock-4",
+    provider_name: "Veena World",
+    destination_region: "Himachal",
+    package_title: "Shimla Manali Premium Himalayan Scenic Escapade",
+    duration_days: 8,
+    duration_nights: 7,
+    price_inr: 54000,
+    inclusions: {
+      flights: true,
+      hotels: true,
+      meals: true,
+      transfers: true,
+      sightseeing: true,
+    },
+    theme: "Family",
+    package_url: "https://www.veenaworld.com/package/shimla-manali-tour-package-shms",
+    image_url: "https://images.unsplash.com/photo-1605649487212-47bdab064df7?q=80&w=600&auto=format&fit=crop",
+    last_scraped_at: new Date().toISOString(),
+  },
+  {
+    id: "mock-5",
+    provider_name: "Kesari Tours",
+    destination_region: "Kashmir",
+    package_title: "Kashmir Luxury Houseboat Experience & Tulip Garden",
+    duration_days: 9,
+    duration_nights: 8,
+    price_inr: 78000,
+    inclusions: {
+      flights: true,
+      hotels: true,
+      meals: true,
+      transfers: true,
+      sightseeing: true,
+    },
+    theme: "Honeymoon",
+    package_url: "https://www.veenaworld.com/package/magical-kashmir-tour-package-haqm",
+    image_url: "https://images.unsplash.com/photo-1589136777351-fdc9c9400c7e?q=80&w=600&auto=format&fit=crop",
+    last_scraped_at: new Date().toISOString(),
+  }
+];
+
 export default async function Home({ searchParams }: PageProps) {
   const supabase = await createClient();
   
@@ -23,17 +127,27 @@ export default async function Home({ searchParams }: PageProps) {
   const inclusions = resolvedSearchParams.inclusions?.split(",")?.filter(Boolean) || [];
 
   // Fetch packages directly using the server client
-  const { data: packages, error } = await supabase
-    .from("packages")
-    .select("*")
-    .order("last_scraped_at", { ascending: false });
+  let packages: Package[] | null = null;
+  let hasDbData = false;
 
-  if (error) {
-    console.error("Error fetching packages:", error);
+  try {
+    const { data, error } = await supabase
+      .from("packages")
+      .select("*")
+      .order("last_scraped_at", { ascending: false });
+
+    if (!error && data && data.length > 0) {
+      packages = data;
+      hasDbData = true;
+    } else if (error) {
+      console.warn("Could not load database packages, fallback to local mock data:", error.message);
+    }
+  } catch (e) {
+    console.warn("Supabase fetch exception, fallback to local mock data:", e);
   }
 
   // Filter package data on server-side
-  let filteredPackages = packages || [];
+  let filteredPackages = hasDbData && packages ? packages : MOCK_PACKAGES;
 
   // Filter by Max Price
   filteredPackages = filteredPackages.filter((pkg) => pkg.price_inr <= maxPrice);
@@ -103,9 +217,14 @@ export default async function Home({ searchParams }: PageProps) {
           {/* Cards Grid Area */}
           <section className="md:col-span-8 lg:col-span-9 flex flex-col gap-6">
             <div className="flex items-center justify-between">
-              <div>
+              <div className="flex items-center gap-3">
                 <h2 className="text-xl font-bold tracking-tight text-slate-950">Available Escape Packages</h2>
-                <p className="text-xs text-slate-500 mt-0.5">Showing aggregated travel choices</p>
+                {!hasDbData && (
+                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-mono font-semibold bg-amber-50 text-amber-700 border border-amber-100">
+                    <span className="w-1 h-1 rounded-full bg-amber-500 animate-pulse" />
+                    DEMO MODE
+                  </span>
+                )}
               </div>
               <div className="text-xs font-mono text-slate-400">
                 {filteredPackages.length} package{filteredPackages.length !== 1 && "s"} found
@@ -113,13 +232,7 @@ export default async function Home({ searchParams }: PageProps) {
             </div>
 
             {/* List / Grid Display */}
-            {!packages ? (
-              <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-                {[1, 2, 3, 4, 5, 6].map((i) => (
-                  <TourCardSkeleton key={i} />
-                ))}
-              </div>
-            ) : filteredPackages.length === 0 ? (
+            {filteredPackages.length === 0 ? (
               <div className="text-center py-20 bg-slate-50/50 rounded-2xl border border-slate-100 border-dashed">
                 <h3 className="text-lg font-semibold text-slate-800 mb-1">No packages match the filters</h3>
                 <p className="text-xs text-slate-500 max-w-xs mx-auto">
