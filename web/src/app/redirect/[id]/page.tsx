@@ -21,10 +21,11 @@ export default function RedirectPage() {
           setProviderName(result.providerName);
         }
         // Redirect to provider
-        window.location.replace(result.url);
+        console.log("Executing redirect to: ", result.url);
+        window.location.href = result.url;
       } catch (err) {
         console.error("Redirect action failed:", err);
-        window.location.replace("/");
+        window.location.href = "/";
       }
     }
 
