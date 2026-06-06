@@ -69,7 +69,10 @@ def parse_with_gemini(markdown_content: str, url: str) -> Optional[TourPackage]:
 async def main():
     urls = [
         "https://www.veenaworld.com/package/magical-kashmir-tour-package-haqm",
-        "https://www.thrillophilia.com/tours/leh-ladakh-tour-packages"
+        "https://www.thrillophilia.com/tours/leh-ladakh-tour-packages",
+        "https://www.thrillophilia.com/tours/manali-tour-packages",
+        "https://www.thrillophilia.com/tours/kashmir-tour-packages",
+        "https://www.veenaworld.com/package/shimla-manali-tour-package-shms"
     ]
     
     supabase_url = os.environ.get("SUPABASE_URL")
