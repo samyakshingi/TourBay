@@ -1,24 +1,26 @@
 # TourBay.in - System State
 
-**Current Phase:** Phase 2 (Aggregator Filter Engine Connected & Live)
+**Current Phase:** Phase 3: Analytics and Routing Complete
 **Last Updated:** June 6, 2026
 
 ## 🟢 Project Status Summary
-**Phase 2 Filter Engine Integrated** - The live data ingestion pipelines are complete, seeding 21 packages from MakeMyTrip, Veena World, and Thrillophilia into Supabase. The front-end has been fully wired to a URL-synced search filter component using Next.js 15 routing parameters (`useSearchParams` wrapped in `<Suspense>`). Query filters are executed server-side via dynamic Supabase/Postgrest builder operations (`.lte()`, `.gte()`, `.contains()` for JSONB inclusions), ensuring highly performant rendering. The build runs with zero TypeScript warnings or errors.
+**Phase 3 Analytics and Interstitial Redirect Complete** - We have successfully built an automated, zero-data-loss affiliate routing framework that captures click telemetry. A new click tracking table schema and migration SQL file has been defined for the `clicks` table (referencing `packages` via foreign key cascade with RLS disabled). A Next.js 15 Server Action (`trackClick.ts`) silently records click logs and fetches booking URLs, with a robust try/catch block protecting user journeys. Users are routed through `/redirect/[id]`, which displays a premium centered interstitial loading view with a custom fast geometric spinner (under 250ms), before redirecting them to their final destination. The Next.js production build succeeds with zero errors.
 
 ## 🛠️ Backend / Data Pipeline (Samyak)
 * **Supabase Database Setup:** COMPLETE (100%)
-* **Scraper Pipeline & Playwright Fallback:** COMPLETE (Headless/Headed stealth mode operational)
-* **Affiliate Campaign Tracker:** COMPLETE (Automated UTM parameter appending)
+* **Scraper Pipeline & Playwright Fallback:** COMPLETE (Playwright headed scraper is operational)
+* **Affiliate Campaign Tracker:** COMPLETE (Automated UTM parameter generator)
 * **Real Data Ingestion:** COMPLETE (21 North India packages scraped and hydrated)
-* **GitHub Actions Automation:** Scheduled for Phase 3.
+* **SQL Migrations:** Local clicks table migration file generated (`web/supabase/migrations/`).
+* **GitHub Actions Automation:** Scheduled for Phase 4.
 
 ## 🖥️ Frontend / UI (Frontend Dev)
 * **Next.js Boilerplate (web/):** Premium UI with zero CLS skeletons.
 * **Tailwind & shadcn/ui Setup:** COMPLETE (Utilizing base-ui primitives).
 * **Supabase Client Integration:** COMPLETE (Server-side queries).
 * **Aggregator Filter Engine:** COMPLETE (URL-synced state, fully server-side filtered, styled with Ocean Blue `#0047AB` tokens and active scale transformations).
+* **Click Analytics & Interstitial Routing:** COMPLETE (Server Action tracking, `/redirect/[id]` client redirect loading page, and TourCard button link update).
 * **Production Build Validation:** COMPLETE (Verified via `npm run build` type-checking).
 
 ## 🚧 Current Blockers / Action Items
-* **Action (Samyak):** Set up GitHub Actions automation for nightly scraper runs (Phase 3).
+* **Action (Samyak):** Set up GitHub Actions automation for nightly scraper runs (Phase 4).

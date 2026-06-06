@@ -110,7 +110,7 @@ export function TourCard({ tour }: { tour: Package }) {
             Best Price Guranteed
           </span>
           <a 
-            href={tour.package_url} 
+            href={`/redirect/${tour.id}`} 
             target="_blank" 
             rel="noopener noreferrer"
             className="inline-flex items-center justify-center whitespace-nowrap rounded-lg text-sm font-semibold transition-[transform,background-color] active:scale-[0.97] bg-[#0047ab] text-white hover:bg-[#00327d] h-10 px-5 shadow-sm duration-200 ease-out"

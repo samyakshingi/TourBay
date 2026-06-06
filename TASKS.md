@@ -6,7 +6,7 @@
 - [x] Implemented Crawl4AI and Gemini 1.5 parsing scraper.
 - [x] Verified database mutations and zero RLS issues.
 
-## Phase 2: Live Ingestion & Filter Engine (Current)
+## Phase 2: Live Ingestion & Filter Engine (Completed)
 - [x] Implement affiliate campaign link tracking parameter generator in crawler.
 - [x] Setup Playwright headed fallback mechanism for anti-bot scraping (MakeMyTrip).
 - [x] Hydrated Supabase instance to 21 active rows of Kashmir, Ladakh, and Manali package data.
@@ -16,6 +16,12 @@
 - [x] Ensure beautiful local mock fallback filtering continues to run if database connection fails.
 - [x] Verify local production compilation with zero errors via `npm run build`.
 
-## Phase 3: Deployment & Production Readiness (Upcoming)
+## Phase 3: Analytics, Interstitial Routing & Automation (Current)
+- [x] Create SQL migration script to establish clicks analytics table and disable RLS.
+- [x] Implement secure Next.js 15 Server Action (`trackClick.ts`) with try/catch fallbacks.
+- [x] Create dynamic interstitial redirect routing layout at `/redirect/[id]`.
+- [x] Design visual layout (off-white backdrop, geometric spin loader, Hanken Grotesk headers).
+- [x] Wire up TourCard CTA deals buttons to dynamic redirect path.
+- [x] Verify production build compiles seamlessly with zero errors.
 - [ ] Automate scraper runs nightly using GitHub Actions.
 - [ ] Implement responsive visual polishing for mobile views.
