@@ -23,5 +23,5 @@
 - [x] Design visual layout (off-white backdrop, geometric spin loader, Hanken Grotesk headers).
 - [x] Wire up TourCard CTA deals buttons to dynamic redirect path.
 - [x] Verify production build compiles seamlessly with zero errors.
-- [ ] Automate scraper runs nightly using GitHub Actions.
+- [x] Automate scraper runs nightly using GitHub Actions.
 - [ ] Implement responsive visual polishing for mobile views.
